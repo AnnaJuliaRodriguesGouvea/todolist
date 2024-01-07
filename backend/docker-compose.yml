@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+  mysqldb:
+    container_name: mysqldb
+    image: mysql
+    networks:
+      - springapimysql-net
+    environment:
+      MYSQL_USER: mysql
+      MYSQL_PASSWORD: 123
+      MYSQL_DATABASE: todolist
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - 3306:3306
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+networks:
+  springapimysql-net:

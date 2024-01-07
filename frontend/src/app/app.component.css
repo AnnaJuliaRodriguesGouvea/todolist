@@ -1,0 +1,66 @@
+.custom-input-class {
+  width: 250px;
+  margin-right: 10px;
+}
+
+.custom-label-class {
+  margin-right: 2%;
+  vertical-align: middle;
+  font-weight: bold;
+}
+
+.custom-button-class {
+  margin-left: 2%;
+}
+
+.custom-div-form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+::ng-deep .p-tag-danger {
+  background-color: red;
+  color: white;
+}
+
+::ng-deep .p-tag-warning {
+  background-color: coral;
+  color: white;
+}
+
+::ng-deep .p-tag-success {
+  background-color: green;
+  color: white;
+}
+
+::ng-deep .p-tag-info {
+  background-color: lightskyblue;
+  color: white;
+}
+
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2%;
+}
+
+.custom-table th,
+.custom-table td {
+  padding: 12px;
+  text-align: left;
+}
+
+.custom-table th {
+  background-color: #f2f2f2;
+}
+
+.custom-table td:last-child,
+.custom-table th:last-child {
+  text-align: center;
+}
+
+.custom-table .p-button {
+  margin-right: 4px;
+}
+

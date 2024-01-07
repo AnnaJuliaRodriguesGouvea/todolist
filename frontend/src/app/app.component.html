@@ -1,0 +1,133 @@
+<div class="flex flex-column align-items-center justify-content-center h-full">
+  <p-card header="TODO LIST" class="w-6 text-center">
+    <div class="custom-div-form m-2">
+      <label for="name" class="custom-label-class">Task:</label>
+      <input
+        id="name"
+        type="text"
+        pInputText
+        [(ngModel)]="task"
+        placeholder="Add a new task..."
+        #todoTask="ngModel"
+        required
+        class="custom-input-class"
+      />
+
+      <label for="priority" class="custom-label-class">Priority:</label>
+      <div style="display: inline-block;">
+        <p-selectButton
+          id="priority"
+          [options]="priorityOptions"
+          [(ngModel)]="priority"
+          [multiple]="false"
+          optionLabel="value"
+          optionValue="value"
+          required
+        ></p-selectButton>
+      </div>
+
+      <p-button
+        icon="pi pi-check"
+        class="custom-button-class"
+        (onClick)="addTask()"
+        [disabled]="!task || !priority"
+      ></p-button>
+    </div>
+    <p class="m-0">
+      <p-table [value]="tasks" class="custom-table">
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="text-align: left;">Task</th>
+            <th style="text-align: center;">Priority</th>
+            <th style="text-align: center;">Status</th>
+            <th></th>
+            <th></th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-task>
+          <tr>
+            <td>{{ task.name }}</td>
+            <td style="text-align: center;">
+              <p-tag [severity]="getPrioritySeverity(task.priorityEnum)">
+                {{ task.priorityEnum }}
+              </p-tag>
+            </td>
+            <td style="text-align: center;">
+              <p-tag [severity]="getStatusSeverity(task.statusEnum)">
+                {{ task.statusEnum }}
+              </p-tag>
+            </td>
+            <td style="text-align: center;">
+              <p-button
+                *ngIf="task.statusEnum != statusCompleted"
+                icon="pi pi-file-edit"
+                styleClass="p-button"
+                (onClick)="showModal($event, task)"
+              ></p-button>
+            </td>
+            <td style="text-align: center;">
+              <p-button
+                *ngIf="task.statusEnum == statusNew"
+                icon="pi pi-play"
+                styleClass="p-button-success"
+                (onClick)="workingTask($event, task?.id)"
+              ></p-button>
+              <p-button
+                *ngIf="task.statusEnum == statusWorking"
+                icon="pi pi-verified"
+                styleClass="p-button-success"
+                (onClick)="completedTask($event, task?.id)"
+              ></p-button>
+            </td>
+            <td style="text-align: center;">
+              <p-button
+                icon="pi pi-trash"
+                styleClass="p-button-danger"
+                (onClick)="deleteTask($event, task?.id)"
+              ></p-button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p>
+    <p-dialog
+      [(visible)]="modalTaskVisible"
+    >
+      <ng-template pTemplate="headless">
+        <div class="flex flex-column px-8 py-5 gap-4" style="border-radius: 12px; background-color: #f9bd05">
+          <div class="inline-flex flex-column gap-2">
+            <label for="name_modal" class="text-primary-50 font-semibold">Task</label>
+            <input
+              id="name_modal"
+              type="text"
+              pInputText
+              [(ngModel)]="taskModal"
+              placeholder="Add a new task..."
+              required
+              class="bg-white-alpha-20 border-none p-3 text-primary-50"
+            />
+          </div>
+          <div class="inline-flex flex-column gap-2">
+            <label for="priority_modal" class="text-primary-50 font-semibold">Priority</label>
+            <div style="display: inline-block;">
+              <p-selectButton
+                id="priority_modal"
+                [options]="priorityOptions"
+                [(ngModel)]="priorityModal"
+                [multiple]="false"
+                optionLabel="value"
+                optionValue="value"
+                required
+              ></p-selectButton>
+            </div>
+          </div>
+          <div class="flex align-items-center gap-2">
+            <p-button label="Update" (onClick)="updateTask($event)" [text]="true" styleClass="w-full text-primary-50 border-3 border-white-alpha-30 hover:bg-white-alpha-10" class="w-full" ></p-button>
+            <p-button label="Cancel" (onClick)="closeModal($event)" [text]="true" styleClass="w-full text-primary-50 border-3 border-white-alpha-30 hover:bg-white-alpha-10" class="w-full" ></p-button>
+          </div>
+        </div>
+      </ng-template>
+    </p-dialog>
+  </p-card>
+</div>
