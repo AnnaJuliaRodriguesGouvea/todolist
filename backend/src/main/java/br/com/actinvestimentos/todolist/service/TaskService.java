@@ -2,6 +2,9 @@ package br.com.actinvestimentos.todolist.service;
 
 import br.com.actinvestimentos.todolist.enums.PriorityEnum;
 import br.com.actinvestimentos.todolist.enums.StatusEnum;
+import br.com.actinvestimentos.todolist.exceptions.IdNotFoundException;
+import br.com.actinvestimentos.todolist.exceptions.InvalidNameException;
+import br.com.actinvestimentos.todolist.exceptions.InvalidPriorityException;
 import br.com.actinvestimentos.todolist.mapper.TaskMapper;
 import br.com.actinvestimentos.todolist.model.task.Task;
 import br.com.actinvestimentos.todolist.model.task.TaskDTO;
@@ -25,44 +28,50 @@ public class TaskService {
         return taskMapper.toDtoList(taskRepository.findAll());
     }
 
-    public TaskDTO insertTask(TaskDTO taskDTO) {
+    public TaskDTO insertTask(TaskDTO taskDTO) throws InvalidNameException, InvalidPriorityException {
         Task task = taskMapper.toEntity(taskDTO);
         isValidTask(task);
         task.setStatusEnum(StatusEnum.NEW);
         return taskMapper.toDto(taskRepository.save(task));
     }
 
-    public TaskDTO updateTask(Long id, TaskDTO taskDTO) {
+    public TaskDTO updateTask(Long id, TaskDTO taskDTO)
+            throws InvalidNameException, InvalidPriorityException, IdNotFoundException {
         Task task = taskMapper.toEntity(taskDTO);
         isValidTask(task);
-        // TODO - colocar exception no OPTIONAL
-        var foundTask = taskRepository.findById(id);
-        foundTask.get().setName(task.getName());
-        foundTask.get().setPriorityEnum(task.getPriorityEnum());
-        return taskMapper.toDto(taskRepository.save(foundTask.get()));
+        var foundTask = taskRepository.findById(id)
+                .orElseThrow(() -> new IdNotFoundException("Id not found!"));
+        foundTask.setName(task.getName());
+        foundTask.setPriorityEnum(task.getPriorityEnum());
+        return taskMapper.toDto(taskRepository.save(foundTask));
     }
 
-    public TaskDTO workingTask(Long id) {
-        // TODO - colocar exception no OPTIONAL
-        Optional<Task> task = taskRepository.findById(id);
-        task.get().working();
-        return taskMapper.toDto(taskRepository.save(task.get()));
+    public TaskDTO workingTask(Long id) throws IdNotFoundException {
+        var task = taskRepository.findById(id)
+                .orElseThrow(() -> new IdNotFoundException("Id not found!"));
+        task.working();
+        return taskMapper.toDto(taskRepository.save(task));
     }
 
-    public TaskDTO completedTask(Long id) {
-        // TODO - colocar exception no OPTIONAL
-        Optional<Task> task = taskRepository.findById(id);
-        task.get().completed();
-        return taskMapper.toDto(taskRepository.save(task.get()));
+    public TaskDTO completedTask(Long id) throws IdNotFoundException {
+        var task = taskRepository.findById(id)
+                .orElseThrow(() -> new IdNotFoundException("Id not found!"));
+        task.completed();
+        return taskMapper.toDto(taskRepository.save(task));
     }
 
     public void deleteTask(Long id) {
         taskRepository.deleteById(id);
     }
 
-    public boolean isValidTask(Task task) {
-        return isValidName(task.getName())
-                && isValidPriority(task.getPriorityEnum());
+    public void isValidTask(Task task) throws InvalidNameException, InvalidPriorityException {
+        if(!isValidName(task.getName())) {
+            throw new InvalidNameException("Name entered is invalid!");
+        }
+
+        if(!isValidPriority(task.getPriorityEnum())) {
+            throw new InvalidPriorityException("Priority entered is invalid!");
+        }
     }
 
     public boolean isValidName(String name) {

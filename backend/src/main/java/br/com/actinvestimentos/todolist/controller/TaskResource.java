@@ -1,5 +1,8 @@
 package br.com.actinvestimentos.todolist.controller;
 
+import br.com.actinvestimentos.todolist.exceptions.IdNotFoundException;
+import br.com.actinvestimentos.todolist.exceptions.InvalidNameException;
+import br.com.actinvestimentos.todolist.exceptions.InvalidPriorityException;
 import br.com.actinvestimentos.todolist.model.task.TaskDTO;
 import br.com.actinvestimentos.todolist.service.TaskService;
 import jakarta.inject.Inject;
@@ -22,25 +25,27 @@ public class TaskResource {
     }
 
     @PostMapping
-    public ResponseEntity<TaskDTO> insertTask(@RequestBody TaskDTO taskDTO) {
+    public ResponseEntity<TaskDTO> insertTask(@RequestBody TaskDTO taskDTO)
+            throws InvalidNameException, InvalidPriorityException {
         var taskDto = taskService.insertTask(taskDTO);
         return new ResponseEntity<>(taskDto, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TaskDTO> updateTask(@PathVariable ("id") Long id, @RequestBody TaskDTO taskDTO) {
+    public ResponseEntity<TaskDTO> updateTask(@PathVariable ("id") Long id, @RequestBody TaskDTO taskDTO)
+            throws InvalidNameException, InvalidPriorityException, IdNotFoundException {
         var taskDto = taskService.updateTask(id, taskDTO);
         return new ResponseEntity<>(taskDto, HttpStatus.OK);
     }
 
     @PutMapping("/working/{id}")
-    public ResponseEntity<TaskDTO> workingTask(@PathVariable ("id") Long id) {
+    public ResponseEntity<TaskDTO> workingTask(@PathVariable ("id") Long id) throws IdNotFoundException {
         var taskDto = taskService.workingTask(id);
         return new ResponseEntity<>(taskDto, HttpStatus.OK);
     }
 
     @PutMapping("/completed/{id}")
-    public ResponseEntity<TaskDTO> completedTask(@PathVariable ("id") Long id) {
+    public ResponseEntity<TaskDTO> completedTask(@PathVariable ("id") Long id) throws IdNotFoundException {
         var taskDto = taskService.completedTask(id);
         return new ResponseEntity<>(taskDto, HttpStatus.OK);
     }

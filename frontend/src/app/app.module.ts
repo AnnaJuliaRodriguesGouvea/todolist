@@ -13,6 +13,7 @@ import {SelectButtonModule} from "primeng/selectbutton";
 import {TagModule} from "primeng/tag";
 import {DialogModule} from "primeng/dialog";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {MessageModule} from "primeng/message";
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
     HttpClientModule,
     SelectButtonModule,
     TagModule,
-    DialogModule
+    DialogModule,
+    MessageModule
   ],
   providers: [],
   bootstrap: [AppComponent]

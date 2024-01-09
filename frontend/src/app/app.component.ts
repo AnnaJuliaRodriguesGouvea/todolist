@@ -31,6 +31,9 @@ export class AppComponent implements OnInit {
   taskModal = '';
   priorityModal = ""
 
+  error: boolean = false
+  errorMessage: string = ""
+
   constructor(private appService: AppService, public dialog: MatDialog) {
   }
 
@@ -43,7 +46,11 @@ export class AppComponent implements OnInit {
       .getTaskList()
       .subscribe(
       response => {
+          this.errorMessage = ""
+          this.error = false
           this.tasks = response;
+        }, error => {
+
         }
       )
   }
@@ -55,6 +62,10 @@ export class AppComponent implements OnInit {
       response => {
           this.todoTask.reset();
           this.getList();
+        }, (error: any) => {
+          this.errorMessage = "Error to add task"
+          this.error = true
+          console.log(error)
         }
       )
   }
@@ -65,6 +76,11 @@ export class AppComponent implements OnInit {
       .subscribe( response => {
           this.modalTaskVisible = false;
           this.getList();
+        }, (error: any) => {
+          this.errorMessage = "Error to update task"
+          this.error = true
+          this.modalTaskVisible = false;
+          console.log(error)
         }
       )
   }
@@ -74,6 +90,10 @@ export class AppComponent implements OnInit {
       .workingTask(id)
       .subscribe( response => {
           this.getList();
+        }, (error: any) => {
+          this.errorMessage = "Error to update task to working"
+          this.error = true
+          console.log(error)
         }
       )
   }
@@ -83,6 +103,10 @@ export class AppComponent implements OnInit {
       .completedTask(id)
       .subscribe( response => {
           this.getList();
+        }, (error: any) => {
+          this.errorMessage = "Error to update task to completed"
+          this.error = true
+          console.log(error)
         }
       )
   }
@@ -91,7 +115,12 @@ export class AppComponent implements OnInit {
     this.appService
       .deleteTask(id)
       .subscribe(
-      response => this.getList()
+      response => this.getList(),
+        (error: any) => {
+          this.errorMessage = "Error to delete task"
+          this.error = true
+          console.log(error)
+        }
       )
   }
 

@@ -33,6 +33,11 @@
         [disabled]="!task || !priority"
       ></p-button>
     </div>
+    <p-message
+      *ngIf="error"
+      severity="error"
+      [text]="errorMessage">
+    </p-message>
     <p class="m-0">
       <p-table [value]="tasks" class="custom-table">
         <ng-template pTemplate="header">
